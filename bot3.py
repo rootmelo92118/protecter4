@@ -38,15 +38,17 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
 
 def NOTIFIED_UPDATE_GROUP(op):
     group = client.getGroup(op.param1)
-    if op.param2 not in whiteListedMid or op.param2 not in group.creator:
-        if group.preventedJoinByTicket == False:
-            try:
-                client.reissueGroupTicket(op.param1)
-                group.preventedJoinByTicket = True
-                client.updateGroup(group)
-                client.kickoutFromGroup(op.param1, [op.param2])
-            except Exception as e:
-                print(e)
+    if op.param2 not in whiteListedMid:
+        if op.param2 not in group.creator:
+            if op.param3 == "4":
+                if group.preventedJoinByTicket == False:
+                    try:
+                        client.reissueGroupTicket(op.param1)
+                        group.preventedJoinByTicket = True
+                        client.updateGroup(group)
+                        client.kickoutFromGroup(op.param1, [op.param2])
+                    except Exception as e:
+                        print(e)
 
 
 def NOTIFIED_ACCEPT_GROUP_INVITATION(op):
