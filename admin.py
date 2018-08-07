@@ -32,29 +32,12 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
 def NOTIFIED_ACCEPT_GROUP_INVITATION(op):
     #print op
     try:
-        botlist = ["ua0eac1836a6251d2e7a7fb448f5ebbb3", "ub51d2d0bb6ac317c501b60c1bf49e7b5"]
         b = open("b.txt", "r")
         blackListedMid = b.readline()
         b.close()
         if op.param2 in blackListedMid:
             try:
-                group = client.getGroup(op.param1)
-                if group.preventedJoinByTicket == True:
-                    try:
-                        group.preventedJoinByTicket = False
-                        str1 = client.reissueGroupTicket(op.param1)
-                        client.updateGroup(group)
-                        client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
-                    except Exception as e:
-                        print(e)
-                else:
-                    try:
-                        str1 = client.reissueGroupTicket(op.param1)
-                        client.updateGroup(group)
-                        client.sendMessage(op.param3,
-                                           "/jgurlx gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
-                    except Exception as e:
-                        print(e)
+                client.kickoutFromGroup(op.param1, [op.param2])
             except Exception as e:
                 print(e)
     except Exception as e:
@@ -84,22 +67,7 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
             if op.param3 in whiteListedMid:
                 if op.param2 not in whiteListedMid:
                     try:
-                        group = client.getGroup(op.param1)
-                        if group.preventedJoinByTicket == True:
-                            try:
-                                group.preventedJoinByTicket = False
-                                str1 = client.reissueGroupTicket(op.param1)
-                                client.updateGroup(group)
-                                client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
-                            except Exception as e:
-                                print(e)
-                        else:
-                            try:
-                                str1 = client.reissueGroupTicket(op.param1)
-                                client.updateGroup(group)
-                                client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
-                            except Exception as e:
-                                print(e)
+                        client.kickoutFromGroup(op.param1, [op.param2]
                     except Exception as e:
                         print(e)
                 group = client.getGroup(op.param1)
@@ -195,7 +163,9 @@ def SEND_MESSAGE(op):
                     client.sendMessage("udb0d47a9a2f0a29804b0fda72787ce68", "/jgurl gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
                     client.sendMessage("u974b7cd3b88d461e103c92ecf3c990a7", "/jgurl gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
                     client.sendMessage("u260ad7f1ae40ae412594930291222161", "/jgurl gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
-                    client.sendMessage("ue6aa8348fc13819fad9c3c20c780c897", "/jgurlx gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
+                    client.sendMessage("ue6aa8348fc13819fad9c3c20c780c897", "/jgurl gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
+                    client.sendMessage("ua0eac1836a6251d2e7a7fb448f5ebbb3", "/jgurl gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
+                    client.sendMessage("ub51d2d0bb6ac317c501b60c1bf49e7b5", "/jgurlx gid: " + msg.to + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
                 if msg.text == "speed":
                     time0 = timeit.timeit('"-".join(str(n) for n in range(100))', number=10000)
                     str1 = str(time0)
@@ -220,7 +190,7 @@ def SEND_MESSAGE(op):
                     client.sendContact(msg.to, MySelf.mid)
                 if msg.text == "/destroy":
                     print("start destroying")
-                    botlist = "u23b3abbf2518782cc270e370d4c73713", "u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897"]
+                    botlist = ["u23b3abbf2518782cc270e370d4c73713", "u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897", "ua0eac1836a6251d2e7a7fb448f5ebbb3", "ub51d2d0bb6ac317c501b60c1bf49e7b5"]
                     _name = msg.text.replace("/destroy","")
                     group = client.getGroup(msg.to)
                     targets = []
@@ -243,6 +213,9 @@ def SEND_MESSAGE(op):
                     client.sendMessage("u974b7cd3b88d461e103c92ecf3c990a7", "/sm mid: " + msg.to + " mid text: 4 text")
                     client.sendMessage("u260ad7f1ae40ae412594930291222161", "/sm mid: " + msg.to + " mid text: 5 text")
                     client.sendMessage("ue6aa8348fc13819fad9c3c20c780c897", "/sm mid: " + msg.to + " mid text: 6 text")
+                    client.sendMessage("ua0eac1836a6251d2e7a7fb448f5ebbb3", "/sm mid: " + msg.to + " mid text: 7 text")
+                    client.sendMessage("ub51d2d0bb6ac317c501b60c1bf49e7b5", "/sm mid: " + msg.to + " mid text: 8 text")
+                    
         else:
             pass
 
