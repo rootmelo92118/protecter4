@@ -1,6 +1,6 @@
 from Linephu.linepy import *
 from Linephu.akad.ttypes import *
-import time
+import time, random
 import timeit
 
 
@@ -14,7 +14,7 @@ MySelf = client.getProfile()
 JoinedGroups = client.getGroupIdsJoined()
 print("My MID : " + MySelf.mid)
 
-whiteListedMid = ["u52afe1d4ea5332242efacfeb9190d2a3", "u58bc30a989f932d0fd73ccb847107779", "u2a3fb897b9e40c92a5962c43ec178006", "u0fcc0258ddc63ea6feea223e1a571445", "ud417ada62140fb51e46c19ec43b5681b", "ueaff862c8ef0202b937bb2203794ef4a"]
+whiteListedMid = ["uadb864b186b1290dd86edb85ca87255d", "u23b3abbf2518782cc270e370d4c73713", "u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897", "ua0eac1836a6251d2e7a7fb448f5ebbb3", "ub51d2d0bb6ac317c501b60c1bf49e7b5"]
 
 #mymid : ""
 
@@ -25,14 +25,14 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
             if op.param2 in whiteListedMid:
                 client.acceptGroupInvitation(op.param1)
                 JoinedGroups.append(op.param1)
-                client.inviteIntoGroup(op.param1, ["u2a3fb897b9e40c92a5962c43ec178006", "u0fcc0258ddc63ea6feea223e1a571445", "ud417ada62140fb51e46c19ec43b5681b", "ueaff862c8ef0202b937bb2203794ef4a"])
+                client.inviteIntoGroup(op.param1, ["u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897"])
                 client.sendMessage(op.param1, "該群權限所有者:")
                 gm = client.getGroup(op.param1).creator.mid
                 client.sendContact(op.param1, gm)
             else:
                 client.acceptGroupInvitation(op.param1)
                 JoinedGroups.append(op.param1)
-                client.inviteIntoGroup(op.param1, ["u52afe1d4ea5332242efacfeb9190d2a3"])
+                client.inviteIntoGroup(op.param1, ["u52afe1d4ea5332242efacfeb9190d2a3", "uadb864b186b1290dd86edb85ca87255d"])
                 client.sendMessage(op.param1, "此行為為自動邀請作者 請勿驚慌")
     except Exception as e:
         print(e)
@@ -95,7 +95,25 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
             JoinedGroups.remove(op.param1)
         else:
             if op.param3 in whiteListedMid:
-                client.kickoutFromGroup(op.param1, [op.param2])
+                try:
+                    group = client.getGroup(op.param1)
+                    if group.preventedJoinByTicket == True:
+                        try:
+                            group.preventedJoinByTicket = False
+                            str1 = client.reissueGroupTicket(op.param1)
+                            client.updateGroup(group)
+                            client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
+                        except Exception as e:
+                            print(e)
+                    else:
+                        try:
+                            str1 = client.reissueGroupTicket(op.param1)
+                            client.updateGroup(group)
+                            client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
+                        except Exception as e:
+                            print(e)
+                except Exception as e:
+                    print(e)
                 group = client.getGroup(op.param1)
                 if group.preventedJoinByTicket == True:
                     try:
@@ -346,7 +364,7 @@ def RECEIVE_MESSAGE(op):
                                             pass
                             if msg.text == "/bye":
                                 client.sendMessage(msg.to, "如果要退防 請通知作者 直接踢防 你會知道")
-                                client.sendContact(msg.to, "u52afe1d4ea5332242efacfeb9190d2a3")
+                                client.sendContact(msg.to, "uadb864b186b1290dd86edb85ca87255d")
                             if msg.text.startswith("/kick"):
                                 str1 = find_between_r(msg.text, "/kick ", "")
                                 if str1 not in whiteListedMid:
