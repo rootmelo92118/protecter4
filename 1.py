@@ -25,7 +25,7 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
             if op.param2 in whiteListedMid:
                 client.acceptGroupInvitation(op.param1)
                 JoinedGroups.append(op.param1)
-                client.inviteIntoGroup(op.param1, ["u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897"])
+                client.inviteIntoGroup(op.param1, ["u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897", "ua0eac1836a6251d2e7a7fb448f5ebbb3", "ub51d2d0bb6ac317c501b60c1bf49e7b5"])
                 client.sendMessage(op.param1, "該群權限所有者:")
                 gm = client.getGroup(op.param1).creator.mid
                 client.sendContact(op.param1, gm)
@@ -96,22 +96,7 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
         else:
             if op.param3 in whiteListedMid:
                 try:
-                    group = client.getGroup(op.param1)
-                    if group.preventedJoinByTicket == True:
-                        try:
-                            group.preventedJoinByTicket = False
-                            str1 = client.reissueGroupTicket(op.param1)
-                            client.updateGroup(group)
-                            client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
-                        except Exception as e:
-                            print(e)
-                    else:
-                        try:
-                            str1 = client.reissueGroupTicket(op.param1)
-                            client.updateGroup(group)
-                            client.sendMessage(random.choice(botlist), "/jgk gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url mid: " + op.param3 + " mid")
-                        except Exception as e:
-                            print(e)
+                    client.kickoutFromGroup(op.param1, [op.param2])
                 except Exception as e:
                     print(e)
                 group = client.getGroup(op.param1)
