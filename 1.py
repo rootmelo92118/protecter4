@@ -1,6 +1,6 @@
 from Linephu.linepy import *
 from Linephu.akad.ttypes import *
-import time, random
+import time
 import timeit
 
 
