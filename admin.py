@@ -67,7 +67,7 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
             if op.param3 in whiteListedMid:
                 if op.param2 not in whiteListedMid:
                     try:
-                        client.kickoutFromGroup(op.param1, [op.param2]
+                        client.kickoutFromGroup(op.param1, [op.param2])
                     except Exception as e:
                         print(e)
                 group = client.getGroup(op.param1)
