@@ -36,19 +36,6 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
         return
 
 
-def NOTIFIED_UPDATE_GROUP(op):
-    group = client.getGroup(op.param1)
-    if op.param2 not in whiteListedMid or op.param2 not in group.creator:
-        if group.preventedJoinByTicket == False:
-            try:
-                client.reissueGroupTicket(op.param1)
-                group.preventedJoinByTicket = True
-                client.updateGroup(group)
-                client.kickoutFromGroup(op.param1, [op.param2])
-            except Exception as e:
-                print(e)
-
-
 def NOTIFIED_ACCEPT_GROUP_INVITATION(op):
     # print op
     try:
@@ -105,19 +92,6 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
                         client.updateGroup(group)
                         client.sendMessage(op.param3,
                                            "/jgurlx gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
-                    except Exception as e:
-                        print(e)
-        if op.param2 not in whiteListedMid or op.param2 not in group.creator:
-            try:
-                client.kickoutFromGroup(op.param1, [op.param2])
-            except Exception as e:
-                print(e)
-        else:
-            if op.param2 not in whiteListedMid and op.param3 in group.creator:
-                    try:
-                        client.kickoutFromGroup(op.param1, [op.param2])
-                        client.findAndAddContactsByMid(op.param3)
-                        client.inviteIntoGroup(op.param1, [op.param3])
                     except Exception as e:
                         print(e)
     except Exception as e:
