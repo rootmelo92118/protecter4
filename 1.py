@@ -26,9 +26,6 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
                 client.acceptGroupInvitation(op.param1)
                 JoinedGroups.append(op.param1)
                 client.inviteIntoGroup(op.param1, ["u50057fea961021c1599ff21157a84c43", "udb0d47a9a2f0a29804b0fda72787ce68", "u974b7cd3b88d461e103c92ecf3c990a7", "u260ad7f1ae40ae412594930291222161", "ue6aa8348fc13819fad9c3c20c780c897", "ua0eac1836a6251d2e7a7fb448f5ebbb3", "ub51d2d0bb6ac317c501b60c1bf49e7b5"])
-                client.sendMessage(op.param1, "該群權限所有者:")
-                gm = client.getGroup(op.param1).creator.mid
-                client.sendContact(op.param1, gm)
             else:
                 client.acceptGroupInvitation(op.param1)
                 JoinedGroups.append(op.param1)
@@ -117,13 +114,6 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
                                            "/jgurlx gid: " + op.param1 + " gid " + "url: http://line.me/R/ti/g/" + str1 + " url")
                     except Exception as e:
                         print(e)
-        if op.param2 not in whiteListedMid and op.param3 in group.creator:
-                try:
-                    client.kickoutFromGroup(op.param1, [op.param2])
-                    client.findAndAddContactsByMid(op.param3)
-                    client.inviteIntoGroup(op.param1, [op.param3])
-                except Exception as e:
-                    print(e)
     except Exception as e:
         print(e)
         print("\n\nNOTIFIED_KICKOUT_FROM_GROUP\n\n")
@@ -283,81 +273,6 @@ def RECEIVE_MESSAGE(op):
                                 except Exception as e:
                                     print(e)
                                 return
-                    else:
-                        if msg._from in group.creator:
-                            print("\n")
-                            print("Private Chat Message Received")
-                            print("Sender's Name : " + client.getContact(msg._from).displayName)
-                            print("Sender's MID : " + msg._from)
-                            print("Received Message : " + msg.text)
-                            print("\n")
-                            if msg.text == "/gid":
-                                client.sendMessage(msg.to, msg.to)
-                            if msg.text == "/ginfo":
-                                group = client.getGroup(msg.to)
-                                md = "[群組名稱]\n" + group.name + "\n\n[gid]\n" + group.id + "\n\n[群組圖片]\nhttp://dl.profile.line-cdn.net/" + group.pictureStatus
-                                if group.preventedJoinByTicket is False:
-                                    md += "\n\n行動網址: 開啟\n"
-                                else:
-                                    md += "\n\n行動網址: 關閉\n"
-                                if group.invitee is None:
-                                    md += "\n成員數: " + str(len(group.members)) + "人\n\n邀請中: 0人"
-                                else:
-                                    md += "\n成員數: " + str(len(group.members)) + "人\n邀請中: " + str(len(group.invitee)) + "人"
-                                    client.sendMessage(msg.to, md)
-                            if msg.text == "/help":
-                                client.sendMessage(msg.to, "群組指令:\n\n/gid\n/ginfo\n/kick <MID>\n/gurl on\n/gurl off\n/bye\nmk @")
-                            if msg.text == "/speed":
-                                time0 = timeit.timeit('"-".join(str(n) for n in range(100))', number=10000)
-                                str1 = str(time0)
-                                client.sendMessage(msg.to, str1)
-                            if msg.text.startswith("/contact"):
-                                str1 = find_between_r(msg.text, "/contact ", "")
-                                client.sendContact(msg.to, str1)
-                            if msg.text == "/mid":
-                                client.sendMessage(msg.to, "名字 : " + client.getContact(msg._from).displayName + "\nMID : " + msg._from + "\n權限等級 : 3")
-                            if msg.text == "/gurl on":
-                                group = client.getGroup(msg.to)
-                                try:
-                                    group.preventedJoinByTicket = False
-                                    str1 = client.reissueGroupTicket(msg.to)
-                                    client.updateGroup(group)
-                                except Exception as e:
-                                    print(e)
-                                client.sendMessage(msg.to, "http://line.me/R/ti/g/" + str1)
-                            if msg.text == "/gurl off":
-                                group = client.getGroup(msg.to)
-                                try:
-                                    client.reissueGroupTicket(msg.to)
-                                    group.preventedJoinByTicket = True
-                                    client.updateGroup(group)
-                                except Exception as e:
-                                    print(e)
-                            if "mk " in msg.text:
-                                key = eval(msg.contentMetadata["MENTION"])
-                                key["MENTIONEES"][0]["M"]
-                                targets = []
-                                for x in key["MENTIONEES"]:
-                                    targets.append(x["M"])
-                                for target in targets:
-                                    if target in whiteListedMid:
-                                        pass
-                                    else:
-                                        try:
-                                            client.kickoutFromGroup(msg.to,[target])
-                                        except:
-                                            pass
-                            if msg.text == "/bye":
-                                client.sendMessage(msg.to, "如果要退防 請通知作者 直接踢防 你會知道")
-                                client.sendContact(msg.to, "uadb864b186b1290dd86edb85ca87255d")
-                            if msg.text.startswith("/kick"):
-                                str1 = find_between_r(msg.text, "/kick ", "")
-                                if str1 not in whiteListedMid:
-                                    try:
-                                        client.kickoutFromGroup(msg.to, [str1])
-                                    except Exception as e:
-                                        print(e)
-                                    return
                 else:
                     pass
             except:
